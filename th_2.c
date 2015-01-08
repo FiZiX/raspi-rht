@@ -57,8 +57,6 @@ int main (void)
   oldtime = (int)time(NULL);
 
   wiringPiSetup () ;
-	// Enable pull-up resistor (may not be necessary)
-	pullUpDnControl (RHT03_PIN, PUD_UP) ;
   piHiPri       (55) ;
 
   printf("rh.c rev 1.79 12/04/2013 WPNS %sCycle time: %i seconds, %i retries\n",ctime(&oldtime),CYCLETIME,RETRIES);
@@ -69,7 +67,7 @@ int main (void)
   if (con == NULL) finish_with_error(con);
 
   if (mysql_real_connect(con, "localhost", "root", "password", 
-			 "Monitoring", 0, NULL, 0) == NULL) finish_with_error(con);*/
+    "Monitoring", 0, NULL, 0) == NULL) finish_with_error(con);*/
 
   // wait for an interval to start and end
   printf("Sync to cycletime...");
@@ -105,9 +103,9 @@ int main (void)
       time(&rawtime);
       timeinfo = localtime (&rawtime);
       strftime (TimeString,64,"%F %T",timeinfo);
-			
-			// Convert to Fahrenheit
-			temp = (temp * 9/5) + 32 ;
+
+      // Convert to Fahrenheit
+      temp = (temp * 1.8) + 32 ;
 
       printf ("%s  Temp: %5.1f, RH: %5.1f%%\n", TimeString, temp / 10.0, rh / 10.0) ;
       fflush(stdout);
