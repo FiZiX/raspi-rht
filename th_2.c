@@ -105,9 +105,9 @@ int main (void)
       strftime (TimeString,64,"%F %T",timeinfo);
 
       // Convert to Fahrenheit
-      temp = (temp * 1.8) + 32 ;
+      temp = ((temp / 10.0) * 1.8) + 32 ;
 
-      printf ("%s  Temp: %5.1f, RH: %5.1f%%\n", TimeString, temp / 10.0, rh / 10.0) ;
+      printf ("%s  Temp: %5.1f, RH: %5.1f%%\n", TimeString, temp, rh / 10.0) ;
       fflush(stdout);
       oldtime = newtime;
 
