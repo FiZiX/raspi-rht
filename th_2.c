@@ -42,6 +42,7 @@ rev 1.79 12/04/2013 WPNS release to instructables
 int main (void)
 {
   int temp, rh ;                 // temperature and relative humidity readings
+  float tempF ;			// temperature in Farenheiht
   int loop;                      // how many times through the loop?
   time_t oldtime,newtime;        // when did we last take a reading?
   //  int deltime;                   // how many seconds ago was that?
@@ -105,9 +106,9 @@ int main (void)
       strftime (TimeString,64,"%F %T",timeinfo);
 
       // Convert to Fahrenheit
-      temp = ((temp / 10.0) * 1.8) + 32 ;
+      tempF = ((temp / 10.0) * 1.8) + 32 ;
 
-      printf ("%s  Temp: %5.1f, RH: %5.1f%%\n", TimeString, temp, rh / 10.0) ;
+      printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, tempF, rh / 10.0) ;
       fflush(stdout);
       oldtime = newtime;
 
