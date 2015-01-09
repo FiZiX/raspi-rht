@@ -72,7 +72,7 @@ int main (void)
       if (resultcntr == 2)
         {
           // Output temperature (in Farenheit), a tab, then the humidity
-          printf ("%5.2f\t%4.1f\n", ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
+          printf ("%5.2f\t%4.1f", ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
           fflush(stdout);
         }
       else
