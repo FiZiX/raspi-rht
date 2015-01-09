@@ -84,18 +84,17 @@ int main (void)
       timeinfo = localtime (&rawtime);
       strftime (TimeString,64,"%F %T",timeinfo);
 
-      // Implement result counter
-      resultcntr++;
-
       // Only output result if this is the 3rd loop
-      if (resultcntr == 3)
+      if (resultcntr == 2)
       {
         printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
         fflush(stdout);
       }
-
-      // wait for the rest of that interval to finish
-      while (!(((int)time(NULL))%CYCLETIME)) delay(100);
+      else
+      {
+        // wait for the rest of that interval to finish
+        while (!(((int)time(NULL))%CYCLETIME)) delay(100);
+      }
     }
   
   return 0 ;
