@@ -49,18 +49,6 @@ int main (void)
   wiringPiSetup () ;
   piHiPri       (55) ;
 
-  //printf("rh.c rev 1.79 12/04/2013 WPNS %sCycle time: %i seconds, %i retries\n",ctime(&oldtime),CYCLETIME,RETRIES);
-  //fflush(stdout);
-
-  // wait for an interval to start and end
-  /*printf("Sync to cycletime...");
-  fflush(stdout);
-  while ((((int)time(NULL))%CYCLETIME)) delay(100);
-  oldtime = (int)time(NULL);
-  while (!(((int)time(NULL))%CYCLETIME)) delay(100);
-  printf("\n");
-  fflush(stdout);*/
-
   // Make 3 iterations and out third result
   for (resultcntr = 0; resultcntr < 3; resultcntr++ )
     {
@@ -74,8 +62,8 @@ int main (void)
       status = readRHT03 (RHT03_PIN, &temp, &rh);
       while ((!status) && loop--)
 	{
-	  printf("-Retry-");
-	  fflush(stdout);
+	  //printf("-Retry-");
+	  //fflush(stdout);
 	  delay(3000);
 	  status = readRHT03 (RHT03_PIN, &temp, &rh);
 	}
@@ -86,15 +74,15 @@ int main (void)
 
       // Only output result if this is the 3rd loop
       if (resultcntr == 2)
-      {
-        printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
-        fflush(stdout);
-      }
+        {
+          printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
+          fflush(stdout);
+        }
       else
-      {
-        // wait for the rest of that interval to finish
-        while (!(((int)time(NULL))%CYCLETIME)) delay(100);
-      }
+        {
+          // wait for the rest of that interval to finish
+          while (!(((int)time(NULL))%CYCLETIME)) delay(100);
+        }
     }
   
   return 0 ;
