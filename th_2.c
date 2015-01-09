@@ -88,7 +88,7 @@ int main (void)
       resultcntr++;
 
       // Only output result if this is the 3rd loop
-      if (resultcntr == 2)
+      if (resultcntr == 3)
       {
         printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
         fflush(stdout);
