@@ -50,17 +50,17 @@ int main (void)
   wiringPiSetup () ;
   piHiPri       (55) ;
 
-  printf("rh.c rev 1.79 12/04/2013 WPNS %sCycle time: %i seconds, %i retries\n",ctime(&oldtime),CYCLETIME,RETRIES);
-  fflush(stdout);
+  //printf("rh.c rev 1.79 12/04/2013 WPNS %sCycle time: %i seconds, %i retries\n",ctime(&oldtime),CYCLETIME,RETRIES);
+  //fflush(stdout);
 
   // wait for an interval to start and end
-  printf("Sync to cycletime...");
+  /*printf("Sync to cycletime...");
   fflush(stdout);
   while ((((int)time(NULL))%CYCLETIME)) delay(100);
   oldtime = (int)time(NULL);
   while (!(((int)time(NULL))%CYCLETIME)) delay(100);
   printf("\n");
-  fflush(stdout);
+  fflush(stdout);*/
 
   for (;;)
     {
