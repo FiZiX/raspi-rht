@@ -34,13 +34,10 @@ rev 1.79 12/04/2013 WPNS release to instructables
 int main (void)
 {
   int temp, rh ;                 // temperature and relative humidity readings
-  int loop;                      // how many times through the loop?
+  int loop ;                      // how many times through the loop?
   int resultcntr ;               // how many results have we sent?
-  //  int deltime;                   // how many seconds ago was that?
 
-  char TimeString[64];           // formatted time
   time_t rawtime;
-  struct tm * timeinfo;
 
   int status;                   // how did the read go?
 
@@ -69,13 +66,11 @@ int main (void)
 	}
 
       time(&rawtime);
-      timeinfo = localtime (&rawtime);
-      strftime (TimeString,64,"%F %T",timeinfo);
 
       // Only output result if this is the 3rd loop
       if (resultcntr == 2)
         {
-          printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
+          printf ("%6.2f\t%5.1f%%\n", ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
           fflush(stdout);
         }
       else
