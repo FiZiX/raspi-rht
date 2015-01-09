@@ -35,6 +35,7 @@ int main (void)
 {
   int temp, rh ;                 // temperature and relative humidity readings
   int loop;                      // how many times through the loop?
+  int resultcntr ;               // how many results have we sent?
   time_t oldtime,newtime;        // when did we last take a reading?
   //  int deltime;                   // how many seconds ago was that?
 
@@ -62,7 +63,8 @@ int main (void)
   printf("\n");
   fflush(stdout);*/
 
-  for (;;)
+  // Make 3 iterations and out third result
+  for (resultcntr = 0; resultcntr < 3; resultcntr++ )
     {
       // wait for an interval to start
       while ((((int)time(NULL))%CYCLETIME)) delay(100);
@@ -86,13 +88,20 @@ int main (void)
       timeinfo = localtime (&rawtime);
       strftime (TimeString,64,"%F %T",timeinfo);
 
-      printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
-      fflush(stdout);
+      // Implement result counter
+      resultcntr++;
+
+      // Only output result if this is the 3rd loop
+      if (resultcntr >= 2)
+      {
+        printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
+        fflush(stdout);
+      }
+      
       oldtime = newtime;
 
       // wait for the rest of that interval to finish
       while (!(((int)time(NULL))%CYCLETIME)) delay(100);
-
     }
   
   return 0 ;
