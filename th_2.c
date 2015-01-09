@@ -21,7 +21,7 @@ rev 1.79 12/04/2013 WPNS release to instructables
 #include <time.h>
 
 #define	RHT03_PIN	7
-#define CYCLETIME      60
+#define CYCLETIME       3
 #define RETRIES         3
 
 
