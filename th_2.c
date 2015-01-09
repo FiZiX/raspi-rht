@@ -45,8 +45,9 @@ int main (void)
 
   wiringPiSetup () ;
   piHiPri       (55) ;
-
-  // Make 3 iterations and out third result
+  
+  // First two results from the sensor are usually inaccurate
+  // Make 3 iterations and output third result
   for (resultcntr = 0; resultcntr < 3; resultcntr++ )
     {
       // wait for an interval to start
@@ -58,19 +59,20 @@ int main (void)
 
       status = readRHT03 (RHT03_PIN, &temp, &rh);
       while ((!status) && loop--)
-	{
-	  //printf("-Retry-");
-	  //fflush(stdout);
-	  delay(3000);
-	  status = readRHT03 (RHT03_PIN, &temp, &rh);
-	}
+        {
+          //printf("-Retry-");
+          //fflush(stdout);
+          delay(3000);
+          status = readRHT03 (RHT03_PIN, &temp, &rh);
+        }
 
       time(&rawtime);
 
       // Only output result if this is the 3rd loop
       if (resultcntr == 2)
         {
-          printf ("%6.2f\t%5.1f%%\n", ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
+          // Output temperature (in Farenheit), a tab, then the humidity
+          printf ("%5.2f\t%4.1f\n", ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
           fflush(stdout);
         }
       else
