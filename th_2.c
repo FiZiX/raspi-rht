@@ -36,7 +36,6 @@ int main (void)
   int temp, rh ;                 // temperature and relative humidity readings
   int loop;                      // how many times through the loop?
   int resultcntr ;               // how many results have we sent?
-  time_t oldtime,newtime;        // when did we last take a reading?
   //  int deltime;                   // how many seconds ago was that?
 
   char TimeString[64];           // formatted time
@@ -46,7 +45,6 @@ int main (void)
   int status;                   // how did the read go?
 
   temp = rh = loop = 0 ;
-  oldtime = (int)time(NULL);
 
   wiringPiSetup () ;
   piHiPri       (55) ;
@@ -82,8 +80,6 @@ int main (void)
 	  status = readRHT03 (RHT03_PIN, &temp, &rh);
 	}
 
-      newtime = (int)time(NULL);
-      //      deltime = newtime-oldtime;
       time(&rawtime);
       timeinfo = localtime (&rawtime);
       strftime (TimeString,64,"%F %T",timeinfo);
@@ -92,13 +88,11 @@ int main (void)
       resultcntr++;
 
       // Only output result if this is the 3rd loop
-      if (resultcntr >= 2)
+      if (resultcntr == 2)
       {
         printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
         fflush(stdout);
       }
-      
-      oldtime = newtime;
 
       // wait for the rest of that interval to finish
       while (!(((int)time(NULL))%CYCLETIME)) delay(100);
