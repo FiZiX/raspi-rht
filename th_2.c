@@ -20,18 +20,10 @@ rev 1.79 12/04/2013 WPNS release to instructables
 #include <maxdetect.h>
 #include <time.h>
 
-//#include <mysql/mysql.h>
-
 #define	RHT03_PIN	7
 #define CYCLETIME      60
 #define RETRIES         3
 
-/*void finish_with_error(MYSQL *con)
-{
-  fprintf(stderr, "%s\n", mysql_error(con));
-  mysql_close(con);
-  exit(1);
-}*/
 
 /*
  ***********************************************************************
@@ -42,12 +34,10 @@ rev 1.79 12/04/2013 WPNS release to instructables
 int main (void)
 {
   int temp, rh ;                 // temperature and relative humidity readings
-  float tempF ;			// temperature in Farenheiht
   int loop;                      // how many times through the loop?
   time_t oldtime,newtime;        // when did we last take a reading?
   //  int deltime;                   // how many seconds ago was that?
 
-  //char SQLstring[64];            // string to send to SQL engine
   char TimeString[64];           // formatted time
   time_t rawtime;
   struct tm * timeinfo;
@@ -63,13 +53,6 @@ int main (void)
   printf("rh.c rev 1.79 12/04/2013 WPNS %sCycle time: %i seconds, %i retries\n",ctime(&oldtime),CYCLETIME,RETRIES);
   fflush(stdout);
 
-  /*MYSQL *con = mysql_init(NULL);
-
-  if (con == NULL) finish_with_error(con);
-
-  if (mysql_real_connect(con, "localhost", "root", "password", 
-    "Monitoring", 0, NULL, 0) == NULL) finish_with_error(con);*/
-
   // wait for an interval to start and end
   printf("Sync to cycletime...");
   fflush(stdout);
@@ -83,8 +66,6 @@ int main (void)
     {
       // wait for an interval to start
       while ((((int)time(NULL))%CYCLETIME)) delay(100);
-
-/*****************************************************************/
 
       // read new data
       temp = rh = -1;
@@ -105,18 +86,9 @@ int main (void)
       timeinfo = localtime (&rawtime);
       strftime (TimeString,64,"%F %T",timeinfo);
 
-      // Convert to Fahrenheit
-      tempF = ((temp / 10.0) * 1.8) + 32 ;
-
-      printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, tempF, rh / 10.0) ;
+      printf ("%s  Temp: %6.2f, RH: %5.1f%%\n", TimeString, ((temp / 10.0) * 1.8) + 32, rh / 10.0) ;
       fflush(stdout);
       oldtime = newtime;
-
-      //sprintf(SQLstring,"INSERT INTO TempHumid VALUES(unix_timestamp(now()),%5.1f,%5.1f)",(temp / 10.0),(rh / 10.0));
-      //      printf("%s\n",SQLstring);
-      //if (mysql_query(con, SQLstring)) finish_with_error(con);
-
-/*****************************************************************/
 
       // wait for the rest of that interval to finish
       while (!(((int)time(NULL))%CYCLETIME)) delay(100);
