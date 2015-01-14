@@ -1,6 +1,7 @@
 # Imports
 import subprocess
 from os.path import expanduser
+from ouimeaux.environment import Environment
 
 # Set the target humidity level
 targetRH = 45
