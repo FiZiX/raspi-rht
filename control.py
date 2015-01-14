@@ -11,9 +11,9 @@ tolerance = 2
 switchName = "WeMo Insight"
 
 # Calculate maximum humidity
-maxRH = targetRG + tolerance
+maxRH = targetRH + tolerance
 # Calculate minimum humidity
-minRH = targetRG - tolerance
+minRH = targetRH - tolerance
 
 # Get home path
 home = expanduser("~")
