@@ -101,7 +101,7 @@ if status == 4:
 # Start or stop humidifier based on relative humidity
 if status == 2:
     sendOutOfWaterAlert()
-elif rh <= minRH && status == 0:
+elif rh <= minRH and status == 0:
     startHumidifier(switch)
-elif rh >= maxRH && status == 1:
+elif rh >= maxRH and status == 1:
     stopHumidifier(switch)
