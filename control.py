@@ -74,9 +74,9 @@ output, err = p.communicate()
 temp, rh = output.split()
 print "Temp: "+temp+"\tRH: "+rh
 
-# Make them ints
-temp = int(temp)
-rh = int(rh)
+# Make them floats
+temp = float(temp)
+rh = float(rh)
 
 # Connect to WeMo Switch
 switch = connectToWeMo(switchName)
