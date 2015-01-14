@@ -36,8 +36,23 @@ def isHumidifierOutOfWater(switch):
     else:
         return False
 
+def sendOutOfWaterAlert():
+    "Send an alert about humidifier being out of water"
+    # TODO
+    return
+
+def startHumidifier(switch):
+    "Turns the WeMo switch on"
+    switch.basicevent.SetBinaryState(BinaryState=1)
+    return
+
+def stopHumidifier(switch):
+    "Turns the WeMo switch off"
+    switch.basicevent.SetBinaryState(BinaryState=0)
+    return
+
 # Set the target humidity level
-targetRH = 45
+targetRH = 43
 # Set the tolerance (+/-) for humidity level
 tolerance = 2
 # Set "friendly" name of WeMo Switch
@@ -83,8 +98,10 @@ if status == 4:
     # Exit with error status
     raise SystemExit(1)
 
-# Check if we need to start or stop humidifier
-# if rh <= minRH && status == 0:
-    # startHumidifier()
-# elif rh >= maxRH && status == 1:
-    # stopHumidifier()
+# Start or stop humidifier based on relative humidity
+if status == 2:
+    sendOutOfWaterAlert()
+elif rh <= minRH && status == 0:
+    startHumidifier(switch)
+elif rh >= maxRH && status == 1:
+    stopHumidifier(switch)
