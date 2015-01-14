@@ -53,7 +53,7 @@ def stopHumidifier(switch):
 
 # Set the target humidity level
 targetRH = 43
-# Set the tolerance (+/-) for humidity level
+# Set the tolerance for humidity level
 tolerance = 2
 # Set "friendly" name of WeMo Switch
 switchName = "WeMo Insight"
@@ -71,7 +71,7 @@ p = subprocess.Popen(["sudo", home+"/raspi-rht/./th_2"], stdout=subprocess.PIPE)
 output, err = p.communicate()
 
 # Split the output into separate variables
-temp, rh = output.split()
+int(temp), int(rh) = output.split()
 print "Temp: "+temp+"\tRH: "+rh
 
 # Connect to WeMo Switch
