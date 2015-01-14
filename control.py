@@ -71,8 +71,12 @@ p = subprocess.Popen(["sudo", home+"/raspi-rht/./th_2"], stdout=subprocess.PIPE)
 output, err = p.communicate()
 
 # Split the output into separate variables
-int(temp), int(rh) = output.split()
+temp, rh = output.split()
 print "Temp: "+temp+"\tRH: "+rh
+
+# Make them ints
+temp = int(temp)
+rh = int(rh)
 
 # Connect to WeMo Switch
 switch = connectToWeMo(switchName)
