@@ -3,6 +3,39 @@ import subprocess
 from os.path import expanduser
 from ouimeaux.environment import Environment
 
+# Functions
+def connectToWeMo(switchName):
+    "Connects to the WeMo switch"
+    env = Environment()
+    env.start()
+    return env.get_switch(switchName)
+
+def isHumidifierRunning(switch):
+    "Checks if WeMo switch is on"
+    if switch.basicevent.GetBinaryState()['BinaryState'] == '1':
+        print true;
+    else:
+        return false
+
+def isHumidifierStopped(switch):
+    "Checks if WeMo switch is off"
+    if switch.basicevent.GetBinaryState()['BinaryState'] == '0':
+        return true
+    else:
+        return false
+
+def isHumidifierOutOfWater(switch):
+    "Checks if WeMo energy usage is low"
+    # Extract current energy usage in mW
+    usage = switch.insight.GetInsightParams()['InsightParams'].split("|")[7]
+    # Convert to watts
+    usage = int(usage) / 1000
+    # If watts is less than 10, it's out of water, unplugged, or turned off
+    if usage < 10:
+        return true
+    else:
+        return false
+
 # Set the target humidity level
 targetRH = 45
 # Set the tolerance (+/-) for humidity level
@@ -55,35 +88,3 @@ if status == 4:
     # startHumidifier()
 # elif rh >= maxRH && status == 1:
     # stopHumidifier()
-
-def connectToWeMo(switchName):
-    "Connects to the WeMo switch"
-    env = Environment()
-    env.start()
-    return env.get_switch(switchName)
-
-def isHumidifierRunning(switch):
-    "Checks if WeMo switch is on"
-    if switch.basicevent.GetBinaryState()['BinaryState'] == '1':
-        print true;
-    else:
-        return false
-
-def isHumidifierStopped(switch):
-    "Checks if WeMo switch is off"
-    if switch.basicevent.GetBinaryState()['BinaryState'] == '0':
-        return true
-    else:
-        return false
-
-def isHumidifierOutOfWater(switch):
-    "Checks if WeMo energy usage is low"
-    # Extract current energy usage in mW
-    usage = switch.insight.GetInsightParams()['InsightParams'].split("|")[7]
-    # Convert to watts
-    usage = int(usage) / 1000
-    # If watts is less than 10, it's out of water, unplugged, or turned off
-    if usage < 10:
-        return true
-    else:
-        return false
