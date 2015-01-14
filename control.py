@@ -13,16 +13,16 @@ def connectToWeMo(switchName):
 def isHumidifierRunning(switch):
     "Checks if WeMo switch is on"
     if switch.basicevent.GetBinaryState()['BinaryState'] == '1':
-        return true
+        return True
     else:
-        return false
+        return False
 
 def isHumidifierStopped(switch):
     "Checks if WeMo switch is off"
     if switch.basicevent.GetBinaryState()['BinaryState'] == '0':
-        return true
+        return True
     else:
-        return false
+        return False
 
 def isHumidifierOutOfWater(switch):
     "Checks if WeMo energy usage is low"
@@ -32,9 +32,9 @@ def isHumidifierOutOfWater(switch):
     usage = int(usage) / 1000
     # If watts is less than 10, it's out of water, unplugged, or turned off
     if usage < 10:
-        return true
+        return True
     else:
-        return false
+        return False
 
 # Set the target humidity level
 targetRH = 45
