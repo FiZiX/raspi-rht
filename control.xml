@@ -1,0 +1,15 @@
+<root>
+	<settings>
+		<enabled>True</enabled>
+		<targetRH>43</targetRH>
+		<tolerance>2</tolerance>
+		<startTime>22:00:00</startTime>
+		<runHours>8</runHours>
+	</settings>
+	<status>
+		<startedDateTime></startedDateTime>
+		<lastRH></lastRH>
+		<lastTemp></lastTemp>
+		<lastUpdate></lastUpdate>
+	</status>
+</root>
