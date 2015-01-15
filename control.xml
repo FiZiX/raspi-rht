@@ -5,6 +5,7 @@
 		<tolerance>2</tolerance>
 		<startTime>22:00:00</startTime>
 		<runHours>8</runHours>
+		<switchName>WeMo Insight</switchName>
 	</settings>
 	<status>
 		<startedDateTime></startedDateTime>
