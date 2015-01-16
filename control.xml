@@ -8,9 +8,11 @@
 		<switchName>WeMo Insight</switchName>
 	</settings>
 	<status>
-		<startedDateTime></startedDateTime>
-		<lastRH></lastRH>
-		<lastTemp></lastTemp>
-		<lastUpdate></lastUpdate>
+		<startedDateTime />
+		<stoppedDateTime />
+		<lastRH />
+		<lastTemp />
+		<lastUpdate />
+		<lastStatus />
 	</status>
 </root>
