@@ -2,6 +2,8 @@
 import subprocess
 from os.path import expanduser
 from ouimeaux.environment import Environment
+from datetime import datetime
+import xml.etree.cElementTree as ET
 
 # Functions
 def connectToWeMo(switchName):
@@ -51,20 +53,34 @@ def stopHumidifier(switch):
     switch.basicevent.SetBinaryState(BinaryState=0)
     return
 
-# Set the target humidity level
-targetRH = 43
-# Set the tolerance for humidity level
-tolerance = 2
-# Set "friendly" name of WeMo Switch
-switchName = "WeMo Insight"
+# Get home path
+home = expanduser("~")    
+# Read settings from XML file
+xmlPath = home+"/raspi-rht/control.xml"
+tree = ET.parse(xmlPath)
+root = tree.getroot()
+settings = root.find("settings")
+
+# Check if script is enabled. Quit if not.
+enabled = settings.find("enabled").text
+if enabled != "True":
+    raise SystemExit(1)
+
+# Get the target humidity level
+targetRH = settings.find("targetRH").text
+# Get the tolerance for humidity level
+tolerance = settings.find("tolerance").text
+# Get time of day (24 hour format) in which the humidifier should start running
+startTime = settings.find("startTime").text
+# Get how many hours it should run and convert to seconds
+runSeconds = int(settings.find("runHours").text) * 60 * 60
+# Get "friendly" name of WeMo Switch
+switchName = settings.find("switchName").text
 
 # Calculate maximum humidity
 maxRH = targetRH + tolerance
 # Calculate minimum humidity
 minRH = targetRH - tolerance
-
-# Get home path
-home = expanduser("~")
 
 # Run program to get temp and humidity from sensor
 p = subprocess.Popen(["sudo", home+"/raspi-rht/./th_2"], stdout=subprocess.PIPE)
@@ -102,10 +118,42 @@ if status == 4:
     # Exit with error status
     raise SystemExit(1)
 
-# Start or stop humidifier based on relative humidity
+
+# Set time format
+timeFormat = "%Y-%m-%d %H:%M:%S.%f"
+
+# Get last time humidifier was started
+status = root.find("status")
+lastStarted = status.find("startedDateTime").text
+
+# Get current date and time as datetime object
+currentDateTime = datetime.now()
+
+# If lastStarted is None, assign to current date and time
+if lastStarted is None:
+    lastStarted = currentDateTime
+else
+    # Convert last started into datetime object
+    lastStarted = datetime.strptime(lastStarted, timeFormat)
+
+# Find the difference between the two times and convert to int
+runTime = currentDateTime - lastStarted
+runTime = int(runTime.total_seconds())
+
+# Start or stop humidifier based on time and relative humidity
 if status == 2:
     sendOutOfWaterAlert()
-elif rh <= minRH and status == 0:
+    finalStatus = "Out of Water"
+elif status == 0 and rh <= minRH:
     startHumidifier(switch)
-elif rh >= maxRH and status == 1:
+    finalStatus = "Running"
+elif status == 1 and rh >= maxRH:
     stopHumidifier(switch)
+    finalStatus = "Not Running"
+    status.find("stoppedDateTime").text = str(currentDateTime)
+
+# Update status in XML file
+status.find("lastRH").text = str(rh)
+status.find("lastTemp").text = str(temp)
+status.find("lastStatus").text = str(finalStatus)
+tree.write(xmlPath)
