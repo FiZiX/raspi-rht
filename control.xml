@@ -4,12 +4,14 @@
 		<targetRH>43</targetRH>
 		<tolerance>2</tolerance>
 		<startTime>22:00:00</startTime>
-		<runHours>8</runHours>
+		<runHours>9</runHours>
 		<switchName>WeMo Insight</switchName>
 	</settings>
 	<status>
 		<startedDateTime />
 		<stoppedDateTime />
+		<nextScheduledStart />
+		<nextScheduledStop />
 		<lastRH />
 		<lastTemp />
 		<lastUpdate />
