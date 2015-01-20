@@ -2,7 +2,7 @@
 import subprocess
 from os.path import expanduser
 from ouimeaux.environment import Environment
-from datetime import datetime
+from datetime import datetime, timedelta
 import xml.etree.cElementTree as ET
 
 # Functions
@@ -67,13 +67,13 @@ if enabled != "True":
     raise SystemExit(1)
 
 # Get the target humidity level
-targetRH = settings.find("targetRH").text
+targetRH = int(settings.find("targetRH").text)
 # Get the tolerance for humidity level
-tolerance = settings.find("tolerance").text
+tolerance = int(settings.find("tolerance").text)
 # Get time of day (24 hour format) in which the humidifier should start running
 startTime = settings.find("startTime").text
 # Get how many hours it should run and convert to seconds
-runSeconds = int(settings.find("runHours").text) * 60 * 60
+runHours = int(settings.find("runHours").text)
 # Get "friendly" name of WeMo Switch
 switchName = settings.find("switchName").text
 
@@ -118,36 +118,53 @@ if status == 4:
     # Exit with error status
     raise SystemExit(1)
 
-
 # Set time format
 timeFormat = "%Y-%m-%d %H:%M:%S.%f"
 
-# Get last time humidifier was started
 status = root.find("status")
-lastStarted = status.find("startedDateTime").text
 
 # Get current date and time as datetime object
 currentDateTime = datetime.now()
 
-# If lastStarted is None, assign to current date and time
-if lastStarted is None:
-    lastStarted = currentDateTime
-else
-    # Convert last started into datetime object
-    lastStarted = datetime.strptime(lastStarted, timeFormat)
+# Get next time humidifier should start
+nextStart = status.find("nextScheduledStart").text
 
-# Find the difference between the two times and convert to int
-runTime = currentDateTime - lastStarted
-runTime = int(runTime.total_seconds())
+# If nextStart is None, assign to next start time on today's date
+if nextStart is None:
+    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000000"
+
+# Convert nextStart into datetime object
+nextStart = datetime.strptime(nextStart, timeFormat)
+
+# Get next time humidifier should stop
+nextStop = status.find("nextScheduledStop").text
+
+# If nextStop is None, make it nextStart + runHours
+if nextStop is None:
+    nextStop = nextStart + timedelta(hours=runHours)
+else:
+    # Convert nextStop into datetime object
+    nextStop = datetime.strptime(nextStop, timeFormat)
+
+# Check if start and stop times need to be updated
+if currentDateTime > nextStop:
+    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000000"
+    # Convert nextStart into datetime object
+    nextStart = datetime.strptime(nextStart, timeFormat)
+    if currentDateTime > nextStart:
+        # Add 24 hours to nextStart
+        nextStart = nextStart + timedelta(hours=24)
+    nextStop = nextStart + timedelta(hours=runHours)
 
 # Start or stop humidifier based on time and relative humidity
 if status == 2:
     sendOutOfWaterAlert()
     finalStatus = "Out of Water"
-elif status == 0 and rh <= minRH:
+elif status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
     finalStatus = "Running"
-elif status == 1 and rh >= maxRH:
+    status.find("startedDateTime").text = str(currentDateTime)
+elif status == 1 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
     finalStatus = "Not Running"
     status.find("stoppedDateTime").text = str(currentDateTime)
@@ -155,5 +172,8 @@ elif status == 1 and rh >= maxRH:
 # Update status in XML file
 status.find("lastRH").text = str(rh)
 status.find("lastTemp").text = str(temp)
+status.find("lastUpdate").text = str(currentDateTime)
 status.find("lastStatus").text = str(finalStatus)
+status.find("nextScheduledStart").text = str(nextStart)
+status.find("nextScheduledStop").text = str(nextSttop)
 tree.write(xmlPath)
