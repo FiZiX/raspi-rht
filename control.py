@@ -68,24 +68,24 @@ home = expanduser("~")
 xmlPath = home+"/raspi-rht/control.xml"
 tree = ET.parse(xmlPath)
 root = tree.getroot()
-settings = root.find("settings")
-status = root.find("status")
+settingsXML = root.find("settings")
+statusXML = root.find("status")
 
 # Check if script is enabled. Quit if not.
-enabled = settings.find("enabled").text
+enabled = settingsXML.find("enabled").text
 if enabled != "True":
     raise SystemExit(1)
 
 # Get the target humidity level
-targetRH = int(settings.find("targetRH").text)
+targetRH = int(settingsXML.find("targetRH").text)
 # Get the tolerance for humidity level
-tolerance = int(settings.find("tolerance").text)
+tolerance = int(settingsXML.find("tolerance").text)
 # Get time of day (24 hour format) in which the humidifier should start running
-startTime = settings.find("startTime").text
+startTime = settingsXML.find("startTime").text
 # Get how many hours it should run and convert to seconds
-runHours = int(settings.find("runHours").text)
+runHours = int(settingsXML.find("runHours").text)
 # Get "friendly" name of WeMo Switch
-switchName = settings.find("switchName").text
+switchName = settingsXML.find("switchName").text
 
 # Calculate maximum humidity
 maxRH = targetRH + tolerance
@@ -114,7 +114,7 @@ currentDateTime = datetime.now()
 env = startWeMoEnvironment()
 
 # Check the last time we ran a WeMo discovery cycle
-lastDiscovery = status.find("lastDiscovery").text
+lastDiscovery = statusXML.find("lastDiscovery").text
 
 if lastDiscovery is not None:
     # Convert to datetime object
@@ -154,7 +154,7 @@ if status == 4:
     raise SystemExit(1)
 
 # Get next time humidifier should start
-nextStart = status.find("nextScheduledStart").text
+nextStart = statusXML.find("nextScheduledStart").text
 
 # If nextStart is None, assign to next start time on today's date
 if nextStart is None:
@@ -164,7 +164,7 @@ if nextStart is None:
 nextStart = datetime.strptime(nextStart, timeFormat)
 
 # Get next time humidifier should stop
-nextStop = status.find("nextScheduledStop").text
+nextStop = statusXML.find("nextScheduledStop").text
 
 # If nextStop is None, make it nextStart + runHours
 if nextStop is None:
@@ -190,17 +190,18 @@ if status == 2:
 elif status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
     finalStatus = "Running"
-    status.find("startedDateTime").text = str(currentDateTime)
+    statusXML.find("startedDateTime").text = str(currentDateTime)
 elif status == 1 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
     finalStatus = "Not Running"
-    status.find("stoppedDateTime").text = str(currentDateTime)
+    statusXML.find("stoppedDateTime").text = str(currentDateTime)
 
 # Update status in XML file
-status.find("lastRH").text = str(rh)
-status.find("lastTemp").text = str(temp)
-status.find("lastUpdate").text = str(currentDateTime)
-status.find("lastStatus").text = str(finalStatus)
-status.find("nextScheduledStart").text = str(nextStart)
-status.find("nextScheduledStop").text = str(nextSttop)
+statusXML.find("nextScheduledStart").text = str(nextStart)
+statusXML.find("nextScheduledStop").text = str(nextSttop)
+statusXML.find("lastRH").text = str(rh)
+statusXML.find("lastTemp").text = str(temp)
+statusXML.find("lastUpdate").text = str(currentDateTime)
+statusXML.find("lastStatus").text = str(finalStatus)
+statusXML.find("lastDiscovery").text = str(lastDiscovery)
 tree.write(xmlPath)
