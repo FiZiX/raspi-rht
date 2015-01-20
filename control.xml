@@ -16,5 +16,6 @@
 		<lastTemp />
 		<lastUpdate />
 		<lastStatus />
+		<lastDiscovery />
 	</status>
 </root>
