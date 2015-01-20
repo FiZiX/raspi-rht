@@ -6,10 +6,19 @@ from datetime import datetime, timedelta
 import xml.etree.cElementTree as ET
 
 # Functions
-def connectToWeMo(switchName):
-    "Connects to the WeMo switch"
+def startWeMoEnvironment():
+    "Starts the WeMo environment"
     env = Environment()
     env.start()
+    return env
+
+def discoverWeMoDevices(env):
+    "Discover WeMo devices"
+    env.discover(seconds=3)
+    return
+
+def connectToWeMo(env, switchName):
+    "Connects to the WeMo switch"
     return env.get_switch(switchName)
 
 def isHumidifierRunning(switch):
@@ -60,6 +69,7 @@ xmlPath = home+"/raspi-rht/control.xml"
 tree = ET.parse(xmlPath)
 root = tree.getroot()
 settings = root.find("settings")
+status = root.find("status")
 
 # Check if script is enabled. Quit if not.
 enabled = settings.find("enabled").text
@@ -94,8 +104,33 @@ print "Temp: "+temp+"\tRH: "+rh
 temp = float(temp)
 rh = float(rh)
 
+# Set time format
+timeFormat = "%Y-%m-%d %H:%M:%S.%f"
+
+# Get current date and time as datetime object
+currentDateTime = datetime.now()
+
+# Start WeMo environment
+env = startWeMoEnvironment()
+
+# Check the last time we ran a WeMo discovery cycle
+lastDiscovery = status.find("lastDiscovery").text
+
+if lastDiscovery is not None:
+    # Convert to datetime object
+    lastDiscovery = datetime.strptime(lastDiscovery, timeFormat)
+
+# Check if lastDiscovery is None or was more than 24 hours ago
+if lastDiscovery is None or (lastDiscovery + timedelta(hours=24)) < currentDateTime:
+    # Clear WeMo cache
+    p = subprocess.Popen(["wemo", "clear"], stdout=subprocess.PIPE)
+    p.communicate()
+    # Rediscover devices
+    discoverWeMoDevices(env)
+    lastDiscovery = currentDateTime
+
 # Connect to WeMo Switch
-switch = connectToWeMo(switchName)
+switch = connectToWeMo(env, switchName)
 
 # Status remains at 4 if no conditions are matched
 status = 4
@@ -117,14 +152,6 @@ print "Status = "+str(status)
 if status == 4:
     # Exit with error status
     raise SystemExit(1)
-
-# Set time format
-timeFormat = "%Y-%m-%d %H:%M:%S.%f"
-
-status = root.find("status")
-
-# Get current date and time as datetime object
-currentDateTime = datetime.now()
 
 # Get next time humidifier should start
 nextStart = status.find("nextScheduledStart").text
