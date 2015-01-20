@@ -140,11 +140,14 @@ if isHumidifierRunning(switch):
     # Check if humidifier is out of water
     if isHumidifierOutOfWater(switch):
         status = 2
+        friendlyStatus = "Out of Water"
     else:
         status = 1
+        friendlyStatus = "Running"
 # Check if humidifier is stopped
 elif isHumidifierStopped(switch):
     status = 0
+    friendlyStatus = "Not Running"
 
 print "Status = "+str(status)
 
@@ -183,19 +186,17 @@ if currentDateTime > nextStop:
         nextStart = nextStart + timedelta(hours=24)
     nextStop = nextStart + timedelta(hours=runHours)
 
-finalStatus = None
-
 # Start or stop humidifier based on time and relative humidity
 if status == 2:
     sendOutOfWaterAlert()
-    finalStatus = "Out of Water"
+    friendlyStatus = "Out of Water"
 elif status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
-    finalStatus = "Running"
+    friendlyStatus = "Running"
     statusXML.find("startedDateTime").text = str(currentDateTime)
 elif status == 1 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
-    finalStatus = "Not Running"
+    friendlyStatus = "Not Running"
     statusXML.find("stoppedDateTime").text = str(currentDateTime)
 
 # Update status in XML file
@@ -204,6 +205,6 @@ statusXML.find("nextScheduledStop").text = str(nextStop)
 statusXML.find("lastRH").text = str(rh)
 statusXML.find("lastTemp").text = str(temp)
 statusXML.find("lastUpdate").text = str(currentDateTime)
-if finalStatus is not None: statusXML.find("lastStatus").text = str(finalStatus)
+statusXML.find("lastStatus").text = str(friendlyStatus)
 statusXML.find("lastDiscovery").text = str(lastDiscovery)
 tree.write(xmlPath)
