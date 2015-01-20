@@ -198,7 +198,7 @@ elif status == 1 and (rh >= maxRH or currentDateTime < nextStart):
 
 # Update status in XML file
 statusXML.find("nextScheduledStart").text = str(nextStart)
-statusXML.find("nextScheduledStop").text = str(nextSttop)
+statusXML.find("nextScheduledStop").text = str(nextStop)
 statusXML.find("lastRH").text = str(rh)
 statusXML.find("lastTemp").text = str(temp)
 statusXML.find("lastUpdate").text = str(currentDateTime)
