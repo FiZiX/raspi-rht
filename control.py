@@ -161,7 +161,7 @@ nextStart = statusXML.find("nextScheduledStart").text
 
 # If nextStart is None, assign to next start time on today's date
 if nextStart is None:
-    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000000"
+    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000001"
 
 # Convert nextStart into datetime object
 nextStart = datetime.strptime(nextStart, timeFormat)
@@ -178,7 +178,7 @@ else:
 
 # Check if start and stop times need to be updated
 if currentDateTime > nextStop:
-    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000000"
+    nextStart = currentDateTime.strftime("%Y-%m-%d")+" "+startTime+".000001"
     # Convert nextStart into datetime object
     nextStart = datetime.strptime(nextStart, timeFormat)
     if currentDateTime > nextStart:
