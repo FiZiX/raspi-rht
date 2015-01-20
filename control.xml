@@ -1,12 +1,19 @@
 <root>
 	<settings>
+		<!-- Set to False to stop control.py from running -->
 		<enabled>True</enabled>
+		<!-- Set target humidity level -->
 		<targetRH>43</targetRH>
+		<!-- Set tolerance of how humidity level -->
 		<tolerance>2</tolerance>
+		<!-- Set time that humidifier should start. Must be in %H:%M:%S format. -->
 		<startTime>22:00:00</startTime>
+		<!-- Set how many hours you'd like the humidifier to run -->
 		<runHours>9</runHours>
+		<!-- Set the friendly name of your WeMo switch -->
 		<switchName>WeMo Insight</switchName>
 	</settings>
+	<!-- DON'T CHANGE ANYTHING BELOW THIS LINE! -->
 	<status>
 		<startedDateTime />
 		<stoppedDateTime />
