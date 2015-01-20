@@ -98,7 +98,7 @@ output, err = p.communicate()
 
 # Split the output into separate variables
 temp, rh = output.split()
-print "Temp: "+temp+"\tRH: "+rh
+#print "Temp: "+temp+"\tRH: "+rh
 
 # Make them floats
 temp = float(temp)
@@ -149,7 +149,7 @@ elif isHumidifierStopped(switch):
     status = 0
     friendlyStatus = "Not Running"
 
-print "Status = "+str(status)
+#print "Status = "+str(status)
 
 # If status is still 4, there's an issue reading the status
 if status == 4:
