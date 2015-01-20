@@ -183,6 +183,8 @@ if currentDateTime > nextStop:
         nextStart = nextStart + timedelta(hours=24)
     nextStop = nextStart + timedelta(hours=runHours)
 
+finalStatus = None
+
 # Start or stop humidifier based on time and relative humidity
 if status == 2:
     sendOutOfWaterAlert()
