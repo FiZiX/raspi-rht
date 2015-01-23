@@ -23,7 +23,8 @@ def connectToWeMo(env, switchName):
 
 def isHumidifierRunning(switch):
     "Checks if WeMo switch is on"
-    if switch.basicevent.GetBinaryState()['BinaryState'] == '1':
+    state = switch.basicevent.GetBinaryState()['BinaryState']
+    if state == '1' or state == '8':
         return True
     else:
         return False
