@@ -188,17 +188,17 @@ if currentDateTime > nextStop:
     nextStop = nextStart + timedelta(hours=runHours)
 
 # Start or stop humidifier based on time and relative humidity
-if status == 2:
-    sendOutOfWaterAlert()
-    friendlyStatus = "Out of Water"
-elif status == 0 and rh <= minRH and currentDateTime >= nextStart:
+if status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
     friendlyStatus = "Running"
     statusXML.find("startedDateTime").text = str(currentDateTime)
-elif status == 1 and (rh >= maxRH or currentDateTime < nextStart):
+elif status > 0 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
     friendlyStatus = "Not Running"
     statusXML.find("stoppedDateTime").text = str(currentDateTime)
+elif status == 2:
+    sendOutOfWaterAlert()
+    friendlyStatus = "Out of Water"
 
 # Update status in XML file
 statusXML.find("nextScheduledStart").text = str(nextStart)
