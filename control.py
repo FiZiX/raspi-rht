@@ -124,7 +124,7 @@ if lastDiscovery is not None:
 # Check if lastDiscovery is None or was more than 24 hours ago
 if lastDiscovery is None or (lastDiscovery + timedelta(hours=24)) < currentDateTime:
     # Clear WeMo cache
-    p = subprocess.Popen(["wemo", "clear"], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["sudo", "wemo clear"], stdout=subprocess.PIPE)
     p.communicate()
     # Rediscover devices
     discoverWeMoDevices(env)
