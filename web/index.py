@@ -8,7 +8,7 @@ class HelloWorld(object):
         # Get home path
         home = expanduser("~")
         # Read settings and status from XML file
-        xmlPath = home+"/raspi-rht/control.xml"
+        xmlPath = "../control.xml"
         tree = ET.parse(xmlPath)
         root = tree.getroot()
         settingsXML = root.find("settings")
