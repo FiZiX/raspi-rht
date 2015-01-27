@@ -1,4 +1,6 @@
 import cherrypy
+from os.path import expanduser
+import xml.etree.cElementTree as ET
 
 class HelloWorld(object):
     @cherrypy.expose
@@ -24,4 +26,3 @@ class HelloWorld(object):
 if __name__ == '__main__':
    cherrypy.config.update("server.conf")
    cherrypy.quickstart(HelloWorld())
-
