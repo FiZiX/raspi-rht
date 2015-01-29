@@ -16,9 +16,11 @@ class HelloWorld(object):
         enabled = settingsXML.find("enabled").text
         nextStart = statusXML.find("nextScheduledStart").text
         nextStop = statusXML.find("nextScheduledStop").text
+        lastStart = statusXML.find("startedDateTime").text
+        lastStop = statusXML.find("stoppedDateTime").text
         rh = statusXML.find("lastRH").text
         temp = statusXML.find("lastTemp").text
-        currentDateTime = statusXML.find("lastUpdate").text
+        lastUpdate = statusXML.find("lastUpdate").text
         friendlyStatus = statusXML.find("lastStatus").text
         lastDiscovery = statusXML.find("lastDiscovery").text
         return "Temp: "+temp+"\tRH: "+rh+"\nEnabled: "+enabled
