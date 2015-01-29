@@ -23,7 +23,17 @@ class HelloWorld(object):
         lastUpdate = statusXML.find("lastUpdate").text
         friendlyStatus = statusXML.find("lastStatus").text
         lastDiscovery = statusXML.find("lastDiscovery").text
-        return "Temp: "+temp+"\tRH: "+rh+"\nEnabled: "+enabled
+        
+        # Put HTML file in string
+        with open ("index.html", "r") as myfile:
+            html=myfile.read()
+        
+        # Replace key value pairs
+        mapping = [ ('{rh}', rh), ('{temp}', temp), ('{enabled}', enabled), ('{friendlyStatus}', friendlyStatus), ('{nextStart}', nextStart), ('{nextStop}', nextStop), ('{lastStart}', lastStart), ('{lastStop}', lastStop), ('{lastUpdate}', lastUpdate), ('{lastDiscovery}', lastDiscovery) ]
+        for k, v in mapping:
+            html = html.replace(k, v)
+        
+        return html
 
 if __name__ == '__main__':
    cherrypy.config.update("server.conf")
