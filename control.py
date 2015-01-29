@@ -99,7 +99,6 @@ output, err = p.communicate()
 
 # Split the output into separate variables
 temp, rh = output.split()
-#print "Temp: "+temp+"\tRH: "+rh
 
 # Make them floats
 temp = float(temp)
@@ -192,10 +191,12 @@ if status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
     friendlyStatus = "Running"
     statusXML.find("startedDateTime").text = str(currentDateTime)
+    print str(currentDateTime)+"\tStarted\tTemp: "+temp+"\tRH: "+rh
 elif status > 0 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
     friendlyStatus = "Not Running"
     statusXML.find("stoppedDateTime").text = str(currentDateTime)
+    print str(currentDateTime)+"\tStopped\tTemp: "+temp+"\tRH: "+rh
 elif status == 2:
     sendOutOfWaterAlert()
     friendlyStatus = "Out of Water"
