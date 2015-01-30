@@ -24,8 +24,10 @@ class HelloWorld(object):
         
         # Set input time format
         timeFormatIn = "%Y-%m-%d %H:%M:%S.%f"
-        # Set output time format
-        timeFormatOut = "%H:%M %m/%d/%Y"
+        # Set output time format (24 hour)
+        #timeFormatOut = "%H:%M %m/%d/%Y"
+        # Set output time format (12 hour)
+        timeFormatOut = "%I:%M%p %m/%d/%Y"
         
         # Convert to dateTime object
         s = datetime.strptime(nextStart, timeFormatIn)
