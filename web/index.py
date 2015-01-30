@@ -1,12 +1,10 @@
 import cherrypy
-from os.path import expanduser
 import xml.etree.cElementTree as ET
+from datetime import datetime
 
 class HelloWorld(object):
     @cherrypy.expose
     def index(self):
-        # Get home path
-        home = expanduser("~")
         # Read settings and status from XML file
         xmlPath = "../control.xml"
         tree = ET.parse(xmlPath)
@@ -23,6 +21,37 @@ class HelloWorld(object):
         lastUpdate = statusXML.find("lastUpdate").text
         friendlyStatus = statusXML.find("lastStatus").text
         lastDiscovery = statusXML.find("lastDiscovery").text
+        
+        # Set input time format
+        timeFormatIn = "%Y-%m-%d %H:%M:%S.%f"
+        # Set output time format
+        timeFormatOut = "%H:%M %m/%d/%Y"
+        
+        # Convert to dateTime object
+        s = datetime.strptime(nextStart, timeFormatIn)
+        # Convert to US date/time format
+        nextStart = s.strftime(timeFormatOut)
+        # Convert to dateTime object
+        s = datetime.strptime(nextStop, timeFormatIn)
+        # Convert to US date/time format
+        nextStop = s.strftime(timeFormatOut)
+        # Convert to dateTime object
+        s = datetime.strptime(lastStart, timeFormatIn)
+        # Convert to US date/time format
+        lastStart = s.strftime(timeFormatOut)
+        # Convert to dateTime object
+        s = datetime.strptime(lastStop, timeFormatIn)
+        # Convert to US date/time format
+        lastStop = s.strftime(timeFormatOut)
+        # Convert to dateTime object
+        s = datetime.strptime(lastUpdate, timeFormatIn)
+        # Convert to US date/time format
+        lastUpdate = s.strftime(timeFormatOut)
+        # Convert to dateTime object
+        s = datetime.strptime(lastDiscovery, timeFormatIn)
+        # Convert to US date/time format
+        lastDiscovery = s.strftime(timeFormatOut)
+        
         
         # Put HTML file in string
         with open ("index.html", "r") as myfile:
