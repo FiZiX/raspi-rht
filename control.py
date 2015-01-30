@@ -191,12 +191,12 @@ if status == 0 and rh <= minRH and currentDateTime >= nextStart:
     startHumidifier(switch)
     friendlyStatus = "Running"
     statusXML.find("startedDateTime").text = str(currentDateTime)
-    print str(currentDateTime)+"\tStarted\tTemp: "+temp+"\tRH: "+rh
+    print str(currentDateTime)+"\tStarted\tTemp: "+str(temp)+"\tRH: "+str(rh)
 elif status > 0 and (rh >= maxRH or currentDateTime < nextStart):
     stopHumidifier(switch)
     friendlyStatus = "Not Running"
     statusXML.find("stoppedDateTime").text = str(currentDateTime)
-    print str(currentDateTime)+"\tStopped\tTemp: "+temp+"\tRH: "+rh
+    print str(currentDateTime)+"\tStopped\tTemp: "+str(temp)+"\tRH: "+str(rh)
 elif status == 2:
     sendOutOfWaterAlert()
     friendlyStatus = "Out of Water"
