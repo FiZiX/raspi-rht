@@ -13,10 +13,6 @@ config = {
     'server.socket_host' : '0.0.0.0',
     'server.socket_port' : 8080,
     'server.thread_pool' : 4
-  },
-  '/static' : {
-    'tools.staticdir.on'  : True,
-    'tools.staticdir.dir' : os.path.join(path, 'static')
   }
 }
 
