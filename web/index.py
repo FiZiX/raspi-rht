@@ -1,8 +1,9 @@
 import cherrypy
+from cherrypy.process.plugins import Daemonizer
 import xml.etree.cElementTree as ET
 from datetime import datetime
 
-class HelloWorld(object):
+class raspiRHT(object):
     @cherrypy.expose
     def index(self):
         # Read settings and status from XML file
@@ -67,5 +68,7 @@ class HelloWorld(object):
         return html
 
 if __name__ == '__main__':
-   cherrypy.config.update("server.conf")
-   cherrypy.quickstart(HelloWorld())
+   Daemonizer(cherrypy.engine).subscribe()
+   cherrypy.tree.mount(raspiRHT(), "/", "server.conf")
+   cherrypy.engine.start()
+   cherrypy.engine.block()
