@@ -7,7 +7,7 @@ import cherrypy
 import xml.etree.cElementTree as ET
 from datetime import datetime
 
-path   = os.path.abspath(os.path.dirname(__file__))
+path = os.path.abspath(os.path.dirname(__file__))
 config = {
   'global' : {
     'server.socket_host' : '0.0.0.0',
@@ -80,8 +80,9 @@ class raspiRHT(object):
         
         return html
 
+cherrypy.tree.mount(raspiRHT(), '/', config)
+
 if __name__ == '__main__':
-  cherrypy.tree.mount(raspiRHT(), '/', config)
   cherrypy.engine.signals.subscribe()
   cherrypy.engine.start()
   cherrypy.engine.block()
