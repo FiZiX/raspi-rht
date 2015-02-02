@@ -1,8 +1,26 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+import os
 import cherrypy
 import xml.etree.cElementTree as ET
 from datetime import datetime
 
-class HelloWorld(object):
+path   = os.path.abspath(os.path.dirname(__file__))
+config = {
+  'global' : {
+    'server.socket_host' : '0.0.0.0',
+    'server.socket_port' : 8080,
+    'server.thread_pool' : 4
+  },
+  '/static' : {
+    'tools.staticdir.on'  : True,
+    'tools.staticdir.dir' : os.path.join(path, 'static')
+  }
+}
+
+class raspiRHT(object):
     @cherrypy.expose
     def index(self):
         # Read settings and status from XML file
@@ -66,6 +84,9 @@ class HelloWorld(object):
         
         return html
 
+cherrypy.tree.mount(raspiRHT(), '/', config)
+
 if __name__ == '__main__':
-   cherrypy.config.update("server.conf")
-   cherrypy.quickstart(HelloWorld())
+  cherrypy.engine.signals.subscribe()
+  cherrypy.engine.start()
+  cherrypy.engine.block()
