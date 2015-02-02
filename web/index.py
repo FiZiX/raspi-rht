@@ -80,9 +80,8 @@ class raspiRHT(object):
         
         return html
 
-cherrypy.tree.mount(raspiRHT(), '/', config)
-
 if __name__ == '__main__':
+  cherrypy.tree.mount(raspiRHT(), '/', config)
   cherrypy.engine.signals.subscribe()
   cherrypy.engine.start()
   cherrypy.engine.block()
