@@ -74,4 +74,4 @@ cherrypy.config.update({'server.socket_port': 8080,
 if __name__ == '__main__':
   cherrypy.engine.signals.subscribe()
   cherrypy.engine.start()
-  #cherrypy.engine.block()
+  cherrypy.engine.block()
