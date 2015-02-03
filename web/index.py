@@ -66,6 +66,4 @@ class raspiRHT(object):
         
         return html
 
-if __name__ == '__main__':
-   cherrypy.config.update("server.conf")
-   cherrypy.quickstart(raspiRHT())
+cherrypy.tree.mount(raspiRHT(), '/')
