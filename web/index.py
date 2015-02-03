@@ -1,4 +1,5 @@
 import cherrypy
+from cherrypy.process.plugins import Daemonizer
 import xml.etree.cElementTree as ET
 from datetime import datetime
 
@@ -66,4 +67,8 @@ class raspiRHT(object):
         
         return html
 
+Daemonizer(cherrypy.engine).subscribe()
+cherrypy.config.update({'server.socket_host': '0.0.0.0'})
 cherrypy.tree.mount(raspiRHT(), '/')
+cherrypy.engine.start()
+cherrypy.engine.block()
