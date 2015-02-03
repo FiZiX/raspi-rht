@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import cherrypy
 from cherrypy.process.plugins import Daemonizer
 import xml.etree.cElementTree as ET
