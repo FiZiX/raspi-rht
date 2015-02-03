@@ -66,12 +66,6 @@ class raspiRHT(object):
         
         return html
 
-cherrypy.tree.mount(raspiRHT(), '/')
-cherrypy.config.update({'server.socket_port': 8080,
-                        'server.socket_host' : '0.0.0.0'
-                        })
-
 if __name__ == '__main__':
-  cherrypy.engine.signals.subscribe()
-  cherrypy.engine.start()
-  cherrypy.engine.block()
+   cherrypy.config.update("server.conf")
+   cherrypy.quickstart(raspiRHT())
