@@ -6,7 +6,7 @@ class raspiRHT(object):
     @cherrypy.expose
     def index(self):
         # Read settings and status from XML file
-        xmlPath = "../control.xml"
+        xmlPath = "/home/pi/raspi-rht/control.xml"
         tree = ET.parse(xmlPath)
         root = tree.getroot()
         settingsXML = root.find("settings")
@@ -56,7 +56,7 @@ class raspiRHT(object):
         
         
         # Put HTML file in string
-        with open ("index.html", "r") as myfile:
+        with open ("/home/pi/raspi-rht/web/index.html", "r") as myfile:
             html=myfile.read()
         
         # Replace key value pairs
