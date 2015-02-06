@@ -1,5 +1,5 @@
 # Imports
-import subprocess
+from subprocess import Popen, PIPE
 from os.path import expanduser
 from ouimeaux.environment import Environment
 from datetime import datetime, timedelta
@@ -94,8 +94,14 @@ maxRH = targetRH + tolerance
 minRH = targetRH - tolerance
 
 # Run program to get temp and humidity from sensor
-p = subprocess.Popen(["sudo", home+"/raspi-rht/./th_2"], stdout=subprocess.PIPE)
+p = Popen(["sudo", home+"/raspi-rht/./th_2"], stdout=PIPE, stderr=PIPE)
 output, err = p.communicate()
+
+# Check if an error was returned
+if err != '':
+    print "ERROR: th_2 returned error "+str(err)
+    # Exit with error status
+    raise SystemExit(1)
 
 # Split the output into separate variables
 temp, rh = output.split()
@@ -123,8 +129,10 @@ if lastDiscovery is not None:
 # Check if lastDiscovery is None or was more than 24 hours ago
 if lastDiscovery is None or (lastDiscovery + timedelta(hours=24)) < currentDateTime:
     # Clear WeMo cache
-    p = subprocess.Popen(["sudo", "wemo clear"], stdout=subprocess.PIPE)
+    p = Popen(["sudo", "wemo", "clear"], stdout=PIPE, stderr=PIPE)
     p.communicate()
+    # Check if an error was returned
+    if err != '': print "WARNING: wemo clear returned error "+str(err)
     # Rediscover devices
     discoverWeMoDevices(env)
     lastDiscovery = currentDateTime
@@ -153,6 +161,7 @@ elif isHumidifierStopped(switch):
 
 # If status is still 4, there's an issue reading the status
 if status == 4:
+    print "ERROR: Unable to read WeMo status"
     # Exit with error status
     raise SystemExit(1)
 
